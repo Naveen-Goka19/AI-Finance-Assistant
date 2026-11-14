@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceAI | Smart Finance Assistant</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 8%;
+            background: white;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: 800;
+            color: #101d3a;
+        }
+
+        .logo span {
+            color: #17ae91;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            margin-left: 12px;
+            padding: 11px 19px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .login {
+            color: #17294e;
+        }
+
+        .register {
+            background: #17ae91;
+            color: white;
+        }
+
+        .hero {
+            min-height: 580px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 35px;
+            padding: 70px 8%;
+            background: linear-gradient(120deg, #101d3a, #294a7c);
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 9px 14px;
+            background: #ffffff18;
+            color: #7ce5c8;
+            border-radius: 30px;
+            font-size: 12px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span {
+            color: #54d6b2;
+        }
+
+        .hero p {
+            color: #d1d9e9;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .hero-button {
+            display: inline-block;
+            background: #17ae91;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .preview {
+            width: 330px;
+            padding: 25px;
+            border-radius: 17px;
+            background: white;
+            color: #172033;
+            box-shadow: 0 20px 50px #00000025;
+        }
+
+        .preview h3 {
+            font-size: 15px;
+            margin-bottom: 22px;
+        }
+
+        .preview-card {
+            background: #f4f7fb;
+            padding: 17px;
+            border-radius: 11px;
+            margin-bottom: 13px;
+        }
+
+        .preview-card small {
+            color: #8490a5;
+        }
+
+        .preview-card h2 {
+            margin-top: 8px;
+            font-size: 23px;
+        }
+
+        .green {
+            color: #17ae91;
+        }
+
+        .blue {
+            color: #3975d7;
+        }
+
+        .features {
+            padding: 65px 8%;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 29px;
+            margin-bottom: 12px;
+        }
+
+        .features > p {
+            color: #8490a5;
+            font-size: 14px;
+            margin-bottom: 35px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature {
+            background: white;
+            padding: 30px 22px;
+            border-radius: 14px;
+            border: 1px solid #edf0f5;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .feature h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .feature p {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #8490a5;
+        }
+
+        .cta {
+            margin: 0 8% 60px;
+            padding: 40px 25px;
+            text-align: center;
+            background: #e7f7f3;
+            border-radius: 16px;
+        }
+
+        .cta h2 {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            color: #718096;
+            margin-bottom: 23px;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            background: #101d3a;
+            color: #c1cbe0;
+            font-size: 12px;
+        }
+
+        @media(max-width: 800px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 35px;
+            }
+
+            .preview {
+                width: 100%;
+                max-width: 380px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 500px) {
+            nav {
+                padding: 18px 5%;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .nav-buttons a {
+                margin-left: 3px;
+                padding: 9px 12px;
+            }
+
+            .hero {
+                padding: 55px 6%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">FINANCE<span>AI.</span></div>
+
+        <div class="nav-buttons">
+            <a href="{{ url_for('login') }}" class="login">Login</a>
+            <a href="{{ url_for('register') }}" class="register">Get Started</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+
+        <div class="hero-content">
+            <div class="tag">✨ SMART PERSONAL FINANCE MANAGEMENT</div>
+
+            <h1>
+                Take Control of Your
+                <span>Financial Future.</span>
+            </h1>
+
+            <p>
+                Manage your income, track expenses, create budgets
+                and understand your spending with the help of
+                intelligent financial insights.
+            </p>
+
+            <a href="{{ url_for('register') }}" class="hero-button">
+                Get Started Free →
+            </a>
+        </div>
+
+        <div class="preview">
+            <h3>📊 Financial Overview</h3>
+
+            <div class="preview-card">
+                <small>Total Income</small>
+                <h2 class="green">₹25,000</h2>
+            </div>
+
+            <div class="preview-card">
+                <small>Total Expenses</small>
+                <h2 style="color:#e45d68;">₹10,000</h2>
+            </div>
+
+            <div class="preview-card">
+                <small>Available Balance</small>
+                <h2 class="blue">₹15,000</h2>
+            </div>
+
+            <small style="color:#8490a5;">
+                Illustrative preview – not actual account data
+            </small>
+        </div>
+
+    </section>
+
+    <section class="features">
+
+        <h2>Everything You Need to Manage Money</h2>
+
+        <p>Simple tools to help you make smarter financial decisions.</p>
+
+        <div class="feature-grid">
+
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <h3>Expense Tracking</h3>
+                <p>Record and monitor your daily income and expenses easily.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Financial Dashboard</h3>
+                <p>View your financial summary through charts and reports.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Finance Assistant</h3>
+                <p>Get expense category predictions and helpful financial insights.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Budget Management</h3>
+                <p>Set spending limits and monitor your budget.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📈</div>
+                <h3>Spending Forecast</h3>
+                <p>Explore estimated future spending based on previous expenses.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Personal Account</h3>
+                <p>Access your own finance information through your account.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Start Managing Your Money Smarter</h2>
+        <p>Create your account and explore your personal finance dashboard.</p>
+
+        <a href="{{ url_for('register') }}" class="hero-button">
+            Create Your Account →
+        </a>
+    </section>
+
+    <footer>
+        © 2026 FinanceAI | AI Finance Assistant
+    </footer>
+
+</body>
+</html>

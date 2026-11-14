@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spending Forecast | FinanceAI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .sidebar {
+            width: 245px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #101d3a;
+            padding: 28px 18px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            padding: 0 12px;
+            margin-bottom: 42px;
+        }
+
+        .logo span { color: #54d6b2; }
+
+        .menu-title {
+            color: #8391aa;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 0 12px;
+            margin-bottom: 13px;
+            letter-spacing: 1px;
+        }
+
+        .menu a {
+            display: block;
+            color: #c4cee0;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 13px;
+        }
+
+        .menu a:hover, .menu a.active {
+            background: #243b62;
+            color: white;
+        }
+
+        .menu a.active {
+            border-left: 3px solid #54d6b2;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout a {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #243b62;
+            border-radius: 9px;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .main {
+            margin-left: 245px;
+            padding: 32px 38px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .topbar p {
+            color: #8792a5;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .user {
+            background: white;
+            border: 1px solid #edf0f5;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #101d3a, #294a7c);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .hero-label {
+            color: #cbd6e9;
+            font-size: 13px;
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            margin: 14px 0;
+        }
+
+        .hero p {
+            color: #cbd6e9;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .hero small {
+            display: inline-block;
+            margin-top: 18px;
+            color: #54d6b2;
+            font-weight: 700;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .box {
+            background: white;
+            border: 1px solid #edf0f5;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .box h2 {
+            font-size: 17px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            color: #8994a7;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #edf0f5;
+            gap: 12px;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-month {
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .history-amount {
+            font-size: 13px;
+            font-weight: 700;
+            color: #34435b;
+        }
+
+        .prediction-note {
+            background: #e7f7f3;
+            padding: 18px;
+            border-radius: 11px;
+            margin-top: 18px;
+        }
+
+        .prediction-note h3 {
+            color: #119879;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .prediction-note p {
+            color: #718096;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px 12px;
+            color: #8994a7;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .flash {
+            background: #e7f7f3;
+            color: #119879;
+            padding: 13px 16px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 12px;
+        }
+
+        .forecast-icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        @media(max-width: 1050px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+
+        @media(max-width: 900px) {
+            .sidebar { width: 190px; }
+            .main { margin-left: 190px; padding: 25px 20px; }
+        }
+
+        @media(max-width: 650px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 18px;
+            }
+
+            .logo { margin-bottom: 18px; }
+
+            .menu {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .menu-title, .logout { display: none; }
+
+            .menu a {
+                padding: 9px;
+                margin: 0;
+                font-size: 11px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .hero { padding: 23px; }
+            .hero h2 { font-size: 29px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">FINANCE<span>AI.</span></div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <nav class="menu">
+        <a href="{{ url_for('dashboard') }}">▦ Dashboard</a>
+        <a href="{{ url_for('add_transaction') }}">＋ Add Transaction</a>
+        <a href="{{ url_for('view_transactions') }}">⇄ Transactions</a>
+        <a href="{{ url_for('budgets') }}">◈ Budgets</a>
+        <a href="{{ url_for('insights') }}">✧ Financial Insights</a>
+        <a href="{{ url_for('forecast') }}" class="active">↗ Spending Forecast</a>
+        <a href="{{ url_for('chatbot') }}">◉ AI Assistant</a>
+    </nav>
+
+    <div class="logout">
+        <a href="{{ url_for('logout') }}">↪ Logout</a>
+    </div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>Spending Forecast</h1>
+            <p>Understand your spending trends and estimate future expenses.</p>
+        </div>
+
+        <div class="user">
+            👤 {{ current_user.name }}
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-label">NEXT MONTH'S PREDICTED EXPENSE</div>
+
+        {% if predicted_expense is not none %}
+            <h2>₹{{ "%.2f"|format(predicted_expense|float) }}</h2>
+            <p>
+                This is an estimated expense based on your previous
+                monthly expense records.
+            </p>
+        {% else %}
+            <h2>Not available yet</h2>
+            <p>
+                Add expenses across at least two different months
+                to generate a forecast.
+            </p>
+        {% endif %}
+
+        <small>✦ FinanceAI Spending Forecast</small>
+    </section>
+
+    {% if forecast_message %}
+        <div class="flash">{{ forecast_message }}</div>
+    {% endif %}
+
+    <section class="content-grid">
+
+        <div class="box">
+            <h2>Monthly Expense History</h2>
+            <p class="subtitle">
+                Your recorded monthly expenses used for forecasting.
+            </p>
+
+            {% if monthly_expenses %}
+
+                {% for amount in monthly_expenses %}
+                    <div class="history-item">
+                        <span class="history-month">
+                            {% if months and loop.index0 < months|length %}
+                                {{ months[loop.index0] }}
+                            {% else %}
+                                Month {{ loop.index }}
+                            {% endif %}
+                        </span>
+
+                        <span class="history-amount">
+                            ₹{{ "%.2f"|format(amount|float) }}
+                        </span>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+                    <div class="forecast-icon">📊</div>
+                    <strong>No expense history available.</strong>
+                    <p>Add expense transactions to view your monthly history.</p>
+                </div>
+
+            {% endif %}
+        </div>
+
+        <div class="box">
+            <h2>About This Forecast</h2>
+            <p class="subtitle">
+                Learn how FinanceAI estimates your future spending.
+            </p>
+
+            <div class="prediction-note">
+                <h3>How does it work?</h3>
+                <p>
+                    FinanceAI uses your recorded monthly expenses and
+                    a simple trend-based calculation to estimate
+                    the next month's expenses.
+                </p>
+            </div>
+
+            <div class="prediction-note">
+                <h3>Why is it useful?</h3>
+                <p>
+                    The forecast can help you plan your budget,
+                    understand spending patterns and make better
+                    financial decisions.
+                </p>
+            </div>
+
+            <div class="prediction-note">
+                <h3>Important</h3>
+                <p>
+                    This is an estimate, not a guarantee. Actual
+                    expenses may be different.
+                </p>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>

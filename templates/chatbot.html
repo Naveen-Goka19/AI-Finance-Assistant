@@ -1,0 +1,542 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Finance Assistant | FinanceAI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .sidebar {
+            width: 245px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #101d3a;
+            padding: 28px 18px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            padding: 0 12px;
+            margin-bottom: 42px;
+        }
+
+        .logo span { color: #54d6b2; }
+
+        .menu-title {
+            color: #8391aa;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 0 12px;
+            margin-bottom: 13px;
+            letter-spacing: 1px;
+        }
+
+        .menu a {
+            display: block;
+            color: #c4cee0;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 13px;
+        }
+
+        .menu a:hover, .menu a.active {
+            background: #243b62;
+            color: white;
+        }
+
+        .menu a.active {
+            border-left: 3px solid #54d6b2;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout a {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #243b62;
+            border-radius: 9px;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .main {
+            margin-left: 245px;
+            padding: 32px 38px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .topbar p {
+            color: #8792a5;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .user {
+            background: white;
+            border: 1px solid #edf0f5;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .chat-container {
+            max-width: 950px;
+            margin: auto;
+            background: white;
+            border: 1px solid #edf0f5;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px #17294e08;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #101d3a, #294a7c);
+            color: white;
+            padding: 23px 26px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .bot-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 13px;
+            background: #ffffff20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .chat-header h2 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .chat-header p {
+            color: #cbd6e9;
+            font-size: 11px;
+        }
+
+        .online-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #54d6b2;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .chat-body {
+            min-height: 390px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 27px;
+            background: #fbfcfe;
+        }
+
+        .message {
+            display: flex;
+            gap: 11px;
+            margin-bottom: 23px;
+            align-items: flex-start;
+        }
+
+        .message.user-message {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e7f7f3;
+            border-radius: 10px;
+            font-size: 17px;
+        }
+
+        .message-content {
+            max-width: 75%;
+        }
+
+        .message-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: #8994a7;
+            margin-bottom: 7px;
+        }
+
+        .bubble {
+            background: white;
+            border: 1px solid #edf0f5;
+            padding: 14px 16px;
+            border-radius: 4px 13px 13px 13px;
+            color: #34435b;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .user-message .bubble {
+            background: #243b62;
+            border: none;
+            color: white;
+            border-radius: 13px 4px 13px 13px;
+        }
+
+        .user-message .message-name {
+            text-align: right;
+        }
+
+        .suggestions {
+            padding: 18px 25px 5px;
+            background: white;
+        }
+
+        .suggestions p {
+            color: #8994a7;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .suggestion {
+            border: 1px solid #dfe5ee;
+            background: white;
+            color: #34435b;
+            padding: 9px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .suggestion:hover {
+            background: #e7f7f3;
+            border-color: #17ae91;
+            color: #119879;
+        }
+
+        .chat-form {
+            display: flex;
+            gap: 12px;
+            padding: 20px 25px 24px;
+            background: white;
+            border-top: 1px solid #edf0f5;
+        }
+
+        .chat-form input {
+            flex: 1;
+            min-width: 0;
+            padding: 15px;
+            border: 1px solid #dfe5ee;
+            border-radius: 9px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .chat-form input:focus {
+            border-color: #17ae91;
+        }
+
+        .send-btn {
+            background: #17ae91;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 0 23px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .send-btn:hover {
+            background: #119879;
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: #9aa4b4;
+            font-size: 10px;
+            padding: 0 15px 18px;
+        }
+
+        @media(max-width: 900px) {
+            .sidebar { width: 190px; }
+            .main { margin-left: 190px; padding: 25px 20px; }
+        }
+
+        @media(max-width: 650px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 18px;
+            }
+
+            .logo { margin-bottom: 18px; }
+
+            .menu {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .menu-title, .logout { display: none; }
+
+            .menu a {
+                padding: 9px;
+                margin: 0;
+                font-size: 11px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 22px 15px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .chat-body {
+                padding: 18px;
+                min-height: 350px;
+            }
+
+            .message-content { max-width: 85%; }
+
+            .chat-form {
+                padding: 15px;
+            }
+
+            .send-btn {
+                padding: 0 15px;
+            }
+
+            .suggestions {
+                padding: 15px 18px 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <div class="logo">FINANCE<span>AI.</span></div>
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <nav class="menu">
+        <a href="{{ url_for('dashboard') }}">▦ Dashboard</a>
+        <a href="{{ url_for('add_transaction') }}">＋ Add Transaction</a>
+        <a href="{{ url_for('view_transactions') }}">⇄ Transactions</a>
+        <a href="{{ url_for('budgets') }}">◈ Budgets</a>
+        <a href="{{ url_for('insights') }}">✧ Financial Insights</a>
+        <a href="{{ url_for('forecast') }}">↗ Spending Forecast</a>
+        <a href="{{ url_for('chatbot') }}" class="active">◉ AI Assistant</a>
+    </nav>
+
+    <div class="logout">
+        <a href="{{ url_for('logout') }}">↪ Logout</a>
+    </div>
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h1>AI Finance Assistant</h1>
+            <p>Your personal assistant for everyday financial questions.</p>
+        </div>
+
+        <div class="user">
+            👤 {{ current_user.name }}
+        </div>
+    </header>
+
+    <section class="chat-container">
+
+        <div class="chat-header">
+            <div class="bot-avatar">🤖</div>
+
+            <div>
+                <h2>FinanceAI Assistant</h2>
+                <p>
+                    <span class="online-dot"></span>
+                    Ready to help with your finances
+                </p>
+            </div>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+
+            <div class="message">
+                <div class="message-avatar">🤖</div>
+
+                <div class="message-content">
+                    <div class="message-name">FINANCEAI ASSISTANT</div>
+
+                    <div class="bubble">
+                        Hello! 👋 Welcome to FinanceAI.
+
+                        <br><br>
+
+                        I can help you understand your income,
+                        expenses, balance, budgets and spending forecast.
+
+                        <br><br>
+
+                        What would you like to know today?
+                    </div>
+                </div>
+            </div>
+
+            {% if user_message %}
+
+                <div class="message user-message">
+                    <div class="message-content">
+                        <div class="message-name">YOU</div>
+                        <div class="bubble">{{ user_message }}</div>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="message-avatar">🤖</div>
+
+                    <div class="message-content">
+                        <div class="message-name">FINANCEAI ASSISTANT</div>
+                        <div class="bubble">{{ bot_response }}</div>
+                    </div>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="suggestions">
+            <p>TRY ASKING</p>
+
+            <div class="suggestion-list">
+
+                <button type="button" class="suggestion"
+                    onclick="askQuestion('What is my balance?')">
+                    My balance
+                </button>
+
+                <button type="button" class="suggestion"
+                    onclick="askQuestion('Show my expenses')">
+                    My expenses
+                </button>
+
+                <button type="button" class="suggestion"
+                    onclick="askQuestion('How can I save money?')">
+                    Saving tips
+                </button>
+
+                <button type="button" class="suggestion"
+                    onclick="askQuestion('Tell me about my budget')">
+                    My budget
+                </button>
+
+                <button type="button" class="suggestion"
+                    onclick="askQuestion('How does forecast work?')">
+                    Forecast
+                </button>
+
+            </div>
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('chatbot') }}"
+              class="chat-form">
+
+            <input
+                type="text"
+                id="messageInput"
+                name="message"
+                placeholder="Ask something about your finances..."
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit" class="send-btn">
+                Send ➤
+            </button>
+
+        </form>
+
+        <div class="disclaimer">
+            FinanceAI provides basic financial information, not professional financial advice.
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+    function askQuestion(question) {
+        document.getElementById("messageInput").value = question;
+        document.getElementById("messageInput").focus();
+    }
+
+    window.onload = function() {
+        const chatBody = document.getElementById("chatBody");
+        chatBody.scrollTop = chatBody.scrollHeight;
+    };
+</script>
+
+</body>
+</html>

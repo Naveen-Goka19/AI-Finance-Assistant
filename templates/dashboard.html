@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | AI Finance Assistant</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: #101d3a;
+            color: white;
+            padding: 28px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 800;
+            margin-bottom: 42px;
+            padding-left: 10px;
+        }
+
+        .brand span {
+            color: #54d6b2;
+        }
+
+        .menu-title {
+            color: #8290ad;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin: 12px 10px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #c1cbe0;
+            text-decoration: none;
+            padding: 13px 14px;
+            margin-bottom: 7px;
+            border-radius: 9px;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #26395f;
+            color: white;
+        }
+
+        .nav-link.active {
+            border-left: 3px solid #54d6b2;
+        }
+
+        .logout {
+            margin-top: auto;
+            color: #ffb4b4;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 32px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .topbar p {
+            color: #8490a5;
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .profile {
+            background: white;
+            padding: 11px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 3px 15px #1c31500a;
+        }
+
+        /* WELCOME */
+        .welcome {
+            background: linear-gradient(120deg, #17294e, #294a7c);
+            color: white;
+            padding: 27px 30px;
+            border-radius: 16px;
+            margin-bottom: 27px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome h2 {
+            font-size: 21px;
+            margin-bottom: 9px;
+        }
+
+        .welcome p {
+            color: #d0daed;
+            font-size: 13px;
+        }
+
+        .welcome-icon {
+            font-size: 43px;
+        }
+
+        /* BUTTONS */
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 27px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: #17ae91;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #243957;
+            border: 1px solid #e3e9f2;
+        }
+
+        /* SUMMARY CARDS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 27px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px #1c315008;
+            border: 1px solid #edf0f5;
+        }
+
+        .stat-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8490a5;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            font-size: 21px;
+        }
+
+        .stat-card h2 {
+            font-size: 25px;
+            margin-top: 17px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .income {
+            color: #16a77f;
+        }
+
+        .expense {
+            color: #e45d68;
+        }
+
+        .balance {
+            color: #3975d7;
+        }
+
+        /* CONTENT GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 23px;
+            border-radius: 14px;
+            border: 1px solid #edf0f5;
+            box-shadow: 0 4px 20px #1c315008;
+            min-width: 0;
+        }
+
+        .panel h3 {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 260px;
+        }
+
+        /* TRANSACTIONS */
+        .transaction-panel {
+            background: white;
+            padding: 23px;
+            border-radius: 14px;
+            border: 1px solid #edf0f5;
+            box-shadow: 0 4px 20px #1c315008;
+            overflow-x: auto;
+        }
+
+        .transaction-panel h3 {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 550px;
+        }
+
+        th {
+            text-align: left;
+            color: #8490a5;
+            font-size: 11px;
+            padding: 13px 10px;
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        td {
+            padding: 15px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid #f0f2f6;
+        }
+
+        .type {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .type-income {
+            background: #e4f8f0;
+            color: #11966e;
+        }
+
+        .type-expense {
+            background: #fff0f0;
+            color: #d94c59;
+        }
+
+        .empty {
+            text-align: center;
+            color: #8994a8;
+            padding: 25px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #98a2b3;
+            font-size: 11px;
+            margin-top: 27px;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 205px;
+            }
+
+            .main {
+                padding: 25px 20px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .brand {
+                margin-bottom: 15px;
+            }
+
+            .menu-title {
+                display: none;
+            }
+
+            .nav-link {
+                display: inline-block;
+                margin: 3px;
+                padding: 10px;
+            }
+
+            .logout {
+                margin-top: 0;
+            }
+
+            .main {
+                padding: 20px 14px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .welcome {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">FINANCE<span>AI.</span></div>
+
+        <div class="menu-title">MAIN MENU</div>
+
+        <a href="{{ url_for('dashboard') }}" class="nav-link active">
+            🏠 Dashboard
+        </a>
+
+        <a href="{{ url_for('add_transaction') }}" class="nav-link">
+            ➕ Add Transaction
+        </a>
+
+        <a href="{{ url_for('view_transactions') }}" class="nav-link">
+            📋 Transactions
+        </a>
+
+        <a href="{{ url_for('budgets') }}" class="nav-link">
+            💰 Budgets
+        </a>
+
+        <div class="menu-title">AI FEATURES</div>
+
+        <a href="{{ url_for('insights') }}" class="nav-link">
+            ✨ Financial Insights
+        </a>
+
+        <a href="{{ url_for('forecast') }}" class="nav-link">
+            📈 Spending Forecast
+        </a>
+
+        <a href="{{ url_for('chatbot') }}" class="nav-link">
+            🤖 AI Assistant
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link logout">
+            🚪 Logout
+        </a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Manage your money. Understand your spending. Plan smarter.</p>
+            </div>
+
+            <div class="profile">
+                👤 {{ current_user.name }}
+            </div>
+        </header>
+
+        <!-- WELCOME -->
+        <section class="welcome">
+            <div>
+                <h2>Welcome back, {{ current_user.name }}! 👋</h2>
+                <p>Here is your personal financial overview.</p>
+            </div>
+
+            <div class="welcome-icon">💼</div>
+        </section>
+
+        <!-- QUICK ACTIONS -->
+        <div class="actions">
+            <a href="{{ url_for('add_transaction') }}"
+               class="btn btn-primary">
+                + Add Transaction
+            </a>
+
+            <a href="{{ url_for('view_transactions') }}"
+               class="btn btn-secondary">
+                View Transactions
+            </a>
+
+            <a href="{{ url_for('budgets') }}"
+               class="btn btn-secondary">
+                Manage Budget
+            </a>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="stat-heading">
+                    TOTAL INCOME
+                    <span class="stat-icon">💵</span>
+                </div>
+                <h2 class="income">
+                    ₹{{ "%.2f"|format(total_income|default(0)) }}
+                </h2>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-heading">
+                    TOTAL EXPENSES
+                    <span class="stat-icon">💸</span>
+                </div>
+                <h2 class="expense">
+                    ₹{{ "%.2f"|format(total_expenses|default(0)) }}
+                </h2>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-heading">
+                    CURRENT BALANCE
+                    <span class="stat-icon">🏦</span>
+                </div>
+                <h2 class="balance">
+                    ₹{{ "%.2f"|format(balance|default(0)) }}
+                </h2>
+            </div>
+
+        </section>
+
+        <!-- CHARTS -->
+        <section class="content-grid">
+
+            <div class="panel">
+                <h3>Expense by Category</h3>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Financial Summary</h3>
+                <div class="chart-container">
+                    <canvas id="summaryChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RECENT TRANSACTIONS -->
+        <section class="transaction-panel">
+
+            <h3>Recent Transactions</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>DATE</th>
+                        <th>DESCRIPTION</th>
+                        <th>CATEGORY</th>
+                        <th>TYPE</th>
+                        <th>AMOUNT</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for transaction in recent_transactions %}
+
+                    <tr>
+                        <td>{{ transaction['date'] }}</td>
+
+                        <td>{{ transaction['description'] }}</td>
+
+                        <td>{{ transaction['category'] }}</td>
+
+                        <td>
+                            {% if transaction['type'] == 'Income' %}
+                                <span class="type type-income">Income</span>
+                            {% else %}
+                                <span class="type type-expense">Expense</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(transaction['amount']) }}
+                        </td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="5" class="empty">
+                            No transactions yet. Add your first transaction!
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </section>
+
+        <footer class="footer">
+            © 2026 FinanceAI | AI Finance Assistant
+        </footer>
+
+    </main>
+
+</div>
+
+<!-- CHART JAVASCRIPT -->
+<script>
+
+    const categoryLabels = {{ category_labels|default([], true)|tojson }};
+    const categoryAmounts = {{ category_amounts|default([], true)|tojson }};
+
+    const expenseChart = document.getElementById('expenseChart');
+
+    new Chart(expenseChart, {
+        type: 'doughnut',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                data: categoryAmounts,
+                backgroundColor: [
+                    '#3975d7',
+                    '#17ae91',
+                    '#f3ad4e',
+                    '#e45d68',
+                    '#8b6de0',
+                    '#43b6c7',
+                    '#9aa6b8'
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    const summaryChart = document.getElementById('summaryChart');
+
+    new Chart(summaryChart, {
+        type: 'bar',
+        data: {
+            labels: ['Income', 'Expenses', 'Balance'],
+            datasets: [{
+                label: 'Amount (₹)',
+                data: [
+                    {{ total_income|default(0) }},
+                    {{ total_expenses|default(0) }},
+                    {{ balance|default(0) }}
+                ],
+                backgroundColor: [
+                    '#17ae91',
+                    '#e45d68',
+                    '#3975d7'
+                ],
+                borderRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

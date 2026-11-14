@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Transaction | AI Finance Assistant</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            padding: 30px 20px;
+            color: #263248;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        }
+
+        .header {
+            background: #14213d;
+            color: white;
+            padding: 25px 30px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #dce5f5;
+            font-size: 14px;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .message {
+            background: #e0f2fe;
+            color: #075985;
+            padding: 12px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button, .cancel {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            background: #14213d;
+            color: white;
+        }
+
+        button:hover {
+            background: #263f69;
+        }
+
+        .cancel {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        @media (max-width: 550px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>✏️ Edit Transaction</h1>
+        <p>Update your income or expense information.</p>
+    </div>
+
+    <div class="form-container">
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST"
+              action="{{ url_for('edit_transaction', record_id=transaction['record_id']) }}">
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="date">Transaction Date</label>
+                    <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value="{{ transaction['date'] }}"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Transaction Type</label>
+                    <select id="type" name="type" required>
+                        <option value="Income"
+                            {% if transaction['type'] == 'Income' %}selected{% endif %}>
+                            Income
+                        </option>
+
+                        <option value="Expense"
+                            {% if transaction['type'] == 'Expense' %}selected{% endif %}>
+                            Expense
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    value="{{ transaction['description'] }}"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (₹)</label>
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    min="0.01"
+                    step="0.01"
+                    value="{{ transaction['amount'] }}"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    {% for category in [
+                        'Food', 'Travel', 'Shopping',
+                        'Education', 'Bills',
+                        'Entertainment', 'Other'
+                    ] %}
+                        <option value="{{ category }}"
+                            {% if transaction['category'] == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="buttons">
+                <button type="submit">Update Transaction</button>
+
+                <a href="{{ url_for('view_transactions') }}"
+                   class="cancel">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

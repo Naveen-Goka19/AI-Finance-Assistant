@@ -1,0 +1,23 @@
+# Python files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Database containing user information
+finance.db
+*.sqlite
+*.sqlite3
+
+# Secret settings
+.env
+
+# VS Code local settings
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
